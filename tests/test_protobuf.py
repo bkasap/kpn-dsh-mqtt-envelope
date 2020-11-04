@@ -1,7 +1,6 @@
-import envelope
+import dsh-envelope
 import json
 import unittest
-
 
 class TestWrappingInput(unittest.TestCase):
     """Test input errors are handled as expected"""

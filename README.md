@@ -2,4 +2,9 @@
 
 Requirements:
 Installation:
+
+```
+pip install kpn-dsh-mqtt-envelope
+```
+
 Usage:
