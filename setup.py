@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='kpn-dsh-mqtt-envelope',
-    version='0.2',
+    version='0.2.1',
     author='Bahadir Kasap',
     author_email="bkasap@gmail.com",
     description="Envelope wrapper/unwrap for kpn-dsh-mqtt-envelopes",

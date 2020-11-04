@@ -8,3 +8,5 @@ pip install kpn-dsh-mqtt-envelope
 ```
 
 Usage:
+
+import dsh-envelope
