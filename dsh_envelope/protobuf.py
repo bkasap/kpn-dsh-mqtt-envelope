@@ -10,7 +10,7 @@ from . import envelope_pb2 as epb
 BEST_EFFORT = 0
 RELIABLE = 1
 
-def wrap(topic: str, message: bytes, tenant: str, publisher: str, publishertype: str='application', retain: bool = False, qos: int = BEST_EFFORT, tracing: dict={}):
+def wrap(topic: str, message: bytes, tenant: str, publisher: str='', publishertype: str='application', retain: bool = False, qos: int = BEST_EFFORT, tracing: dict=None):
     """
     Wrap the key and message in the DSH envelope
 
@@ -38,16 +38,6 @@ def wrap(topic: str, message: bytes, tenant: str, publisher: str, publishertype:
     if publishertype not in ['free_form, ''user', 'client', 'application']:
         raise ValueError('publishertype should be one of: ', 'free_form, ''user', 'client', 'application')
 
-        envelope_key.key,
-        envelope_data.payload,
-        envelope_key.header.identifier.tenant,
-        envelope_key.header.identifier.WhichOneof("publisher"),
-        getattr(envelope_key.header.identifier, envelope_key.header.identifier.WhichOneof("publisher")),
-        envelope_key.header.retained,
-        envelope_key.header.qos,
-        tracing
-
-
     # Envelope key generation
     envelope_key = epb.KeyEnvelope()
     # Key header
@@ -61,8 +51,9 @@ def wrap(topic: str, message: bytes, tenant: str, publisher: str, publishertype:
     # Envelope message wrapping
     envelope_data = epb.DataEnvelope()
     envelope_data.payload = message
-    for key in tracing:
-        envelope_data.tracing[key] = tracing[key]
+    if tracing!=None:
+        for key in tracing:
+            envelope_data.tracing[key] = tracing[key]
 
     # Returning tuple
     return (envelope_key.SerializeToString(), envelope_data.SerializeToString())
@@ -83,10 +74,6 @@ def unwrap(key, message):
     envelope_key = epb.KeyEnvelope()
     envelope_key.ParseFromString(key)
 
-    tracing = {}
-    for key in envelope_data.tracing:
-        tracing[key] = envelope_data.tracing[key]
-
     payload = (
         envelope_key.key,
         envelope_data.payload,
@@ -94,8 +81,13 @@ def unwrap(key, message):
         getattr(envelope_key.header.identifier, envelope_key.header.identifier.WhichOneof("publisher")),
         envelope_key.header.identifier.WhichOneof("publisher"),
         envelope_key.header.retained,
-        envelope_key.header.qos,
-        tracing
+        envelope_key.header.qos
     )
-    
+
+    if envelope_data.tracing!=None:
+        tracing = {}
+        for key in envelope_data.tracing:
+            tracing[key] = envelope_data.tracing[key]
+        payload = payload + (tracing)
+
     return payload

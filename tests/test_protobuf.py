@@ -1,4 +1,4 @@
-import dsh-envelope
+import dsh_envelope as envelope
 import json
 import unittest
 
