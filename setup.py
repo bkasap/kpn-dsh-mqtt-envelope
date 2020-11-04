@@ -1,9 +1,9 @@
-from setuptools import setup
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(
+setuptools.setup(
     name='kpn-dsh-mqtt-envelope',
     version='0.2',
     author='Bahadir Kasap',
@@ -12,14 +12,13 @@ setup(
     url="https://github.com/bkasap/kpn-dsh-mqtt-envelope",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=("test", "test.*")),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=2.7',
-    install_requires=[
-        'googleapis-common-protos',
-    ]
+    install_requires=['googleapis-common-protos'],
+    zip_safe=False
 )
